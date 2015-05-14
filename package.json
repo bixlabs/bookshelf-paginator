@@ -1,0 +1,40 @@
+{
+  "name": "bookshelf-paginator",
+  "version": "1.0.0",
+  "description": "Allow paginate your models with ease.",
+  "main": "src/paginator.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/jshint src/ --reporter=./node_modules/jshint-full-path/index.js",
+    "checkStyle": "./node_modules/.bin/jscs src/",
+    "test": "mocha --ui bdd tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bixsolutions/bookshelf-paginator.git"
+  },
+  "keywords": [
+    "Bookshelf",
+    "Paginator",
+    "Pager"
+  ],
+  "author": "Julian Reyes Escrigas <jreyes@bix.com.uy>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bixsolutions/bookshelf-paginator/issues"
+  },
+  "homepage": "https://github.com/bixsolutions/bookshelf-paginator",
+  "devDependencies": {
+    "jshint": "^2.7.0",
+    "jshint-full-path": "^1.1.1",
+    "mocha": "^2.2.4"
+  },
+  "dependencies": {
+    "bluebird": "^2.9.8",
+    "bookshelf": "^0.7.9",
+    "bookshelf-model-loader": "^0.9.6",
+    "lodash": "^3.8.0"
+  },
+  "jscsConfig": {
+    "preset": "airbrb"
+  }
+}
