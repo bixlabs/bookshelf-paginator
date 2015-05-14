@@ -1,7 +1,7 @@
 {
   "name": "bookshelf-paginator",
   "version": "1.0.0",
-  "description": "Allow paginate your models with ease.",
+  "description": "Allow paginate your models with ease",
   "main": "src/paginator.js",
   "scripts": {
     "lint": "./node_modules/.bin/jshint src/ --reporter=./node_modules/jshint-full-path/index.js",
