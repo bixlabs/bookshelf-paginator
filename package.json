@@ -35,6 +35,7 @@
     "lodash": "^3.8.0"
   },
   "jscsConfig": {
-    "preset": "airbrb"
+    "preset": "airbrb",
+    "excludeFiles": ["node_modules/**"]
   }
 }
