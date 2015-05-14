@@ -2,8 +2,27 @@
 
 bookshelf-paginator allow paginate your models with ease.
 
-This library depends of `bookshelf-model-loader` and `bookshelf`
+This library depends of `bookshelf-model-loader` and `bookshelf`.
 
+This library help you create paginated lists, simple connected without adding extra data to the response body.
+Allowing popular response headers easily, the headers are customizables, here the complete default options
+```
+{
+headers: {
+  total: 'X-Total',
+  limit: 'X-Limit',
+  offset: 'X-Offset'
+},
+queryStrings: {
+  limit: 'limit',
+  offset: 'offset'
+},
+limit: 25,
+offset: 0,
+filterBy: [],
+sortBy: 'id'
+}
+```
 
 ## How to use
 
