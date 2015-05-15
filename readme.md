@@ -20,7 +20,8 @@ queryStrings: {
 limit: 25,
 offset: 0,
 filterBy: [],
-sortBy: 'id'
+sortBy: 'id',
+comp: '='
 }
 ```
 

@@ -38,7 +38,7 @@ describe('Paginator', function() {
 
     it('able to filter results using model properties', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname']
+        filterBy: ['gender', 'firstname', 'lastname']
       });
 
       paginator.paginate({limit: 10, gender: 'male'})
@@ -51,7 +51,7 @@ describe('Paginator', function() {
 
     it('able to sort results using model properties', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id']
+        filterBy: ['gender', 'firstname', 'lastname', 'id']
       });
 
       paginator.paginate({limit: 10, gender: 'female', sortBy: 'lastname'})
@@ -65,7 +65,7 @@ describe('Paginator', function() {
 
     it('able to sort (invert) results using model properties', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id']
+        filterBy: ['gender', 'firstname', 'lastname', 'id']
       });
 
       paginator.paginate({limit: 10, gender: 'female', sortBy: '-lastname'})
@@ -79,7 +79,7 @@ describe('Paginator', function() {
 
     it('able to offset results', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id']
+        filterBy: ['gender', 'firstname', 'lastname', 'id']
       });
 
       var filter0 = {limit: 10, gender: 'female', sortBy: '-lastname'};
@@ -101,7 +101,7 @@ describe('Paginator', function() {
 
     it('able to paginate results with related models', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
       });
 
       paginator
@@ -115,7 +115,7 @@ describe('Paginator', function() {
 
     it('able to sorting results with related model properties', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
       });
 
       paginator
@@ -145,7 +145,7 @@ describe('Paginator', function() {
 
     it('able to filtering results with related model properties', function(done) {
       var paginator = new Paginator('Person', {
-        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
       });
 
       paginator
@@ -161,6 +161,26 @@ describe('Paginator', function() {
 
           done();
         });
+    });
+
+    it('it able to filtering using different comparison operator', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name'],
+        comp: 'LIKE'
+      });
+
+      paginator
+        .paginate({firstname: 'L%'})
+        .then(function() {
+          paginator.getData().map(
+            function(person) {
+              should(person.get('firstname')).match(/^L/);
+            }
+
+          );
+
+          done();
+        })
     });
   });
 });
