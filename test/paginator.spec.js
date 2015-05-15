@@ -6,7 +6,6 @@ var bootstrap = require('./../src/bootstrap');
 var Models;
 var Paginator;
 var should = require('should');
-var Promise = require('bluebird');
 
 describe('Paginator', function() {
   before(function(done) {
@@ -32,6 +31,16 @@ describe('Paginator', function() {
         .then(function() {
           should(paginator.getTotal()).equal(80);
           should(paginator.getData().size()).equal(10);
+          done();
+        });
+    });
+
+    it('able to limit without pass nothing', function(done) {
+      var paginator = new Paginator('Person');
+      paginator.paginate()
+        .then(function() {
+          should(paginator.getTotal()).equal(80);
+          should(paginator.getData().size()).equal(25);
           done();
         });
     });
