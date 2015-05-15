@@ -2,11 +2,13 @@
   "name": "bookshelf-paginator",
   "version": "1.0.0",
   "description": "Allow paginate your models with ease",
-  "main": "src/paginator.js",
+  "main": "lib/paginator.js",
   "scripts": {
-    "lint": "./node_modules/.bin/jshint src/ --reporter=./node_modules/jshint-full-path/index.js",
-    "checkStyle": "./node_modules/.bin/jscs src/",
-    "test": "mocha --ui bdd tests/"
+    "lint": "jshint ./src --reporter=./node_modules/jshint-full-path/index.js",
+    "checkStyle": "jscs .",
+    "pretest": "npm run-script lint && npm run-script checkStyle",
+    "test": "istanbul cover ./node_modules/.bin/_mocha -- --recursive -R spec -r should test/**/*",
+    "posttest": "istanbul check-coverage && rm -rf coverage"
   },
   "repository": {
     "type": "git",
@@ -24,18 +26,26 @@
   },
   "homepage": "https://github.com/bixsolutions/bookshelf-paginator",
   "devDependencies": {
+    "istanbul": "^0.3.14",
+    "jscs": "^1.13.1",
     "jshint": "^2.7.0",
     "jshint-full-path": "^1.1.1",
-    "mocha": "^2.2.4"
+    "mocha": "^2.2.4",
+    "q-io": "^1.12.0",
+    "should": "^6.0.1",
+    "sqlite3": "^3.0.8"
   },
   "dependencies": {
     "bluebird": "^2.9.8",
     "bookshelf": "^0.7.9",
     "bookshelf-model-loader": "^0.9.6",
+    "knex": "^0.8.5",
     "lodash": "^3.8.0"
   },
   "jscsConfig": {
-    "preset": "airbrb",
-    "excludeFiles": ["node_modules/**"]
+    "preset": "airbnb",
+    "excludeFiles": [
+      "node_modules/**"
+    ]
   }
 }

@@ -27,4 +27,4 @@ build/Release
 node_modules
 
 # Sqlite
-tests/data.db
+data.db
