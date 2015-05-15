@@ -6,6 +6,7 @@ var bootstrap = require('./../src/bootstrap');
 var Models;
 var Paginator;
 var should = require('should');
+var Promise = require('bluebird');
 
 describe('Paginator', function() {
   before(function(done) {
@@ -94,6 +95,70 @@ describe('Paginator', function() {
         .then(function() {
           offset10 = paginator.getData().toJSON();
           should(offset0).not.equal(offset10);
+          done();
+        });
+    });
+
+    it('able to paginate results with related models', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+      });
+
+      paginator
+        .paginate({limit: 10, gender: 'female', sortBy: '-lastname'}, {withRelated: 'languages'})
+        .then(function() {
+          should(paginator.getData().size()).equal(10);
+          should(paginator.getData().at(0).getPrimaryLanguage()).not.equal(null);
+          done();
+        });
+    });
+
+    it('able to sorting results with related model properties', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+      });
+
+      paginator
+        .paginate({limit: 10, sortBy: '-languages.name'}, {withRelated: 'languages'})
+        .then(function() {
+          should(paginator.getData().size()).equal(10);
+          paginator.getData().map(
+            function(person) {
+              should(person.getPrimaryLanguage()).equal('Spanish');
+            }
+
+          );
+
+          return paginator.paginate({limit: 10, sortBy: 'languages.name'}, {withRelated: 'languages'})
+        })
+        .then(function() {
+          should(paginator.getData().size()).equal(10);
+          paginator.getData().map(
+            function(person) {
+              should(person.getPrimaryLanguage()).equal('English');
+            }
+
+          );
+          done();
+        });
+    });
+
+    it('able to filtering results with related model properties', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firtname', 'lastname', 'id', 'languages.name']
+      });
+
+      paginator
+        .paginate({limit: 10, sortBy: '-languages.name', 'languages.name': 'English'}, {withRelated: 'languages'})
+        .then(function() {
+          should(paginator.getData().size()).equal(10);
+          paginator.getData().map(
+            function(person) {
+              should(person.getPrimaryLanguage()).equal('English');
+            }
+
+          );
+
           done();
         });
     });
