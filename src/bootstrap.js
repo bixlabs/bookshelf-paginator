@@ -9,7 +9,8 @@ var loader = require('bookshelf-model-loader');
 var path = require('path');
 var Promise = require('bluebird');
 var fs = require('q-io/fs');
-var dbFile = path.join(__dirname, 'data.db');
+var dbFile = path.join(__dirname, '..', 'data', 'data.db');
+var chance = require('chance').Chance();
 
 function initilize() {
   var datastore = bookshelf(knex({
@@ -25,7 +26,7 @@ function initilize() {
     path: __dirname + '/models'
   });
 
-  fs.exists(dbFile).then(
+  return fs.exists(dbFile).then(
     function(exists) {
       if (exists) {
         return fs.remove(dbFile);
@@ -59,7 +60,18 @@ function initilize() {
 
         )
       ]);
-    });
+    })
+    .then(
+    function() {
+      return Promise.map(Array(100).join(0).split(0).map(Number.call, Number), function() {
+        return datastore.knex('person').insert({
+          firstname: chance.first(),
+          lastname: chance.last()
+        });
+      });
+    }
+
+  );
 
 }
 
