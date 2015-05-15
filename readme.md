@@ -31,12 +31,41 @@ sortBy: 'id'
     $ npm install --save bookshelf-paginator
 
 ### Setup your models
-...
+```
+var Language = Models.Bookshelf.Model.extend({
+  tableName: 'language'
+});
+
+var Person = Models.Bookshelf.Model.extend({
+  tableName: 'person',
+  languages: function() {
+    return this.belongsToMany('Language', 'person_speaks_language', 'person_id', 'language_id');
+  },
+
+  getLanguages: function() {
+    return this.related('languages');
+  },
+
+  getPrimaryLanguage: function() {
+    if (this.getLanguages().size()) {
+      return this.getLanguages().at(0).get('name');
+    }
+  },
+
+  toJSON: function() {
+    return {
+      fullname: [this.get('firstname'), ' ', this.get('lastname')].join(' ').trim(),
+      primaryLanguage: this.getPrimaryLanguage()
+    };
+  }
+});
+
+```
 
 ### How to use
 
 ```
-var Paginator = require('pagination');
+var Paginator = require('bookshelf-paginator');
 
 var paginator = new Paginator('Person', {
   limit: 15,
@@ -54,9 +83,9 @@ paginator.paginate().then(function(paginator) {
 or use with express
 
 ```
-app.get('/people', function(req, res) {
-  var Paginator = require('pagination');
+var Paginator = require('bookshelf-paginator');
 
+app.get('/people', function(req, res) {
   var paginator = new Paginator('Person', {
     limit: req.query.limit || 25,
     filterBy: ['firstname', 'lastname']
@@ -66,5 +95,23 @@ app.get('/people', function(req, res) {
     paginator.setHeaders(res);
     res.json(paginator.getResults());
   });
+});
+```
+
+Filter and sort by related fields
+
+```
+var Paginator = require('bookshelf-paginator');
+
+var paginator = new Paginator('Person', {
+  limit: 15,
+  filterBy: ['firstname', 'lastname', 'languages.name']
+});
+
+paginator.paginate({'languages.name': 'Spanish', 'sortBy': '-lastname'}).then(function(paginator) {
+  paginator.getResults(); // return a person collection
+  paginator.getTotal(); // return total register
+  paginator.getOffset(); // return offset
+  paginator.getLimit(); // return limit
 });
 ```
