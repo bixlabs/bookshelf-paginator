@@ -13,6 +13,16 @@ var dbFile = path.join(__dirname, '..', 'data', 'data.db');
 var chance = require('chance').Chance();
 var datastore;
 
+function insert(cant, gender) {
+  return Promise.map(new Array(cant).join(0).split(0).map(Number.call, Number), function() {
+    return datastore.knex('person').insert({
+      firstname: chance.first(),
+      lastname: chance.last(),
+      gender: gender
+    });
+  });
+}
+
 function initilize() {
   return fs.exists(dbFile).then(
     function(exists) {
@@ -50,6 +60,7 @@ function initilize() {
             table.increments();
             table.string('firstname');
             table.string('lastname');
+            table.string('gender');
           }
 
         ),
@@ -65,12 +76,7 @@ function initilize() {
     })
     .then(
     function() {
-      return Promise.map(new Array(100).join(0).split(0).map(Number.call, Number), function() {
-        return datastore.knex('person').insert({
-          firstname: chance.first(),
-          lastname: chance.last()
-        });
-      });
+      return Promise.all([insert(50, 'female'), insert(30, 'male')]);
     }
 
   );
