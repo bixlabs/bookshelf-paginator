@@ -11,21 +11,9 @@ var Promise = require('bluebird');
 var fs = require('q-io/fs');
 var dbFile = path.join(__dirname, '..', 'data', 'data.db');
 var chance = require('chance').Chance();
+var datastore;
 
 function initilize() {
-  var datastore = bookshelf(knex({
-    client: 'sqlite',
-    connection: {
-      filename: dbFile
-    }
-  }));
-
-  loader.init(datastore, {
-    plugins: ['virtuals', 'visibility', 'registry'],
-    excludes: [],
-    path: __dirname + '/models'
-  });
-
   return fs.exists(dbFile).then(
     function(exists) {
       if (exists) {
@@ -34,6 +22,20 @@ function initilize() {
     }
 
   )
+    .then(function() {
+      datastore = bookshelf(knex({
+        client: 'sqlite',
+        connection: {
+          filename: dbFile
+        }
+      }));
+
+      loader.init(datastore, {
+        plugins: ['virtuals', 'visibility', 'registry'],
+        excludes: [],
+        path: __dirname + '/models'
+      });
+    }).delay(500)
     .then(function() {
       return Promise.all([
         datastore.knex.schema.createTable('language',
