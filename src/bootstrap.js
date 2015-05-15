@@ -74,12 +74,31 @@ function initilize() {
         )
       ]);
     })
-    .then(
-    function() {
+    .then(function() {
       return Promise.all([insert(50, 'female'), insert(30, 'male')]);
-    }
+    })
+    .then(function() {
+      var languages = [
+        {name: 'Spanish'},
+        {name: 'English'}
+      ];
 
-  );
+      return Promise.map(languages, function(language) {
+        return datastore.knex('language').insert(language);
+      });
+    })
+    .then(function() {
+      var personSpeaksLan = [];
+      for (var i = 1; i <= 80; i++) {
+        // jscs:disable
+        personSpeaksLan.push({person_id: i, language_id: i > 60 ? 1 : 2});
+        // jscs:enable
+      }
+
+      return Promise.map(personSpeaksLan, function(psl) {
+        return datastore.knex('person_speaks_language').insert(psl);
+      });
+    });
 
 }
 
