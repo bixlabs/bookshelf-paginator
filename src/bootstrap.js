@@ -63,7 +63,7 @@ function initilize() {
     })
     .then(
     function() {
-      return Promise.map(Array(100).join(0).split(0).map(Number.call, Number), function() {
+      return Promise.map(new Array(100).join(0).split(0).map(Number.call, Number), function() {
         return datastore.knex('person').insert({
           firstname: chance.first(),
           lastname: chance.last()

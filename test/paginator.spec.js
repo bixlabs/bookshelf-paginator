@@ -15,8 +15,10 @@ describe('Paginator', function() {
       })
       .then(function() {
         done();
+      })
+      .catch(function(err) {
+        done(err);
       });
-
   });
 
   describe('paginate()', function() {
