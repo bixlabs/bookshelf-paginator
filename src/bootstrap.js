@@ -90,9 +90,16 @@ function initilize() {
     .then(function() {
       var personSpeaksLan = [];
       for (var i = 1; i <= 80; i++) {
+        // Some users has two languages
         // jscs:disable
-        personSpeaksLan.push({person_id: i, language_id: i > 60 ? 1 : 2});
+        personSpeaksLan.push({person_id: i, language_id: 1});
         // jscs:enable
+
+        if (i > 10) {
+          // jscs:disable
+          personSpeaksLan.push({person_id: i, language_id: 2});
+          // jscs:enable
+        }
       }
 
       return Promise.map(personSpeaksLan, function(psl) {
