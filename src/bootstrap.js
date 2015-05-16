@@ -35,6 +35,7 @@ function initilize() {
     .then(function() {
       datastore = bookshelf(knex({
         client: 'sqlite',
+        debug: parseInt(process.env.DB_DEBUG || 0) === 1,
         connection: {
           filename: dbFile
         }
