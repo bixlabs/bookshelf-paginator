@@ -55,6 +55,10 @@ describe('Paginator', function() {
           should(paginator.getTotal()).equal(30);
           should(paginator.getData().size()).equal(10);
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 
@@ -116,9 +120,37 @@ describe('Paginator', function() {
       paginator
         .paginate({limit: 10, gender: 'female', sortBy: '-lastname'}, {withRelated: 'languages'})
         .then(function() {
+          should(paginator.getTotal()).equal(50);
           should(paginator.getData().size()).equal(10);
           should(paginator.getData().at(0).getPrimaryLanguage()).not.equal(null);
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
+        });
+    });
+
+    it('able to sorting results with related model properties', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
+      });
+
+      paginator.paginate({limit: 10, sortBy: 'languages.name'}, {withRelated: 'languages'})
+        .then(function() {
+          should(paginator.getTotal()).equal(80);
+          should(paginator.getData().size()).equal(10);
+          paginator.getData().map(
+            function(person) {
+              should(person.getPrimaryLanguage()).equal(null);
+            }
+
+          );
+          done();
+        })
+        .catch(function(err) {
+
+          done(err);
         });
     });
 
@@ -138,17 +170,11 @@ describe('Paginator', function() {
 
           );
 
-          return paginator.paginate({limit: 10, sortBy: 'languages.name'}, {withRelated: 'languages'})
-        })
-        .then(function() {
-          should(paginator.getData().size()).equal(10);
-          paginator.getData().map(
-            function(person) {
-              should(person.getPrimaryLanguage()).equal('English');
-            }
-
-          );
           done();
+        })
+        .catch(function(err) {
+
+          done(err);
         });
     });
 
@@ -160,15 +186,20 @@ describe('Paginator', function() {
       paginator
         .paginate({limit: 10, sortBy: '-languages.name', 'languages.name': 'English'}, {withRelated: 'languages'})
         .then(function() {
+          should(paginator.getTotal()).equal(60);
           should(paginator.getData().size()).equal(10);
           paginator.getData().map(
             function(person) {
-              should(person.getPrimaryLanguage()).equal('English');
+              should(person.getLanguages().toJSON()).containDeep(['English']);
             }
 
           );
 
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 

@@ -19,6 +19,8 @@ var Person = Models.Bookshelf.Model.extend({
   getPrimaryLanguage: function() {
     if (this.getLanguages().size()) {
       return this.getLanguages().at(0).get('name');
+    } else {
+      return null;
     }
   },
 
