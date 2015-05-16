@@ -90,7 +90,7 @@ function initilize() {
     })
     .then(function() {
       var personSpeaksLan = [];
-      for (var i = 1; i <= 80; i++) {
+      for (var i = 1; i <= 70; i++) {
         // Some users has two languages
         // jscs:disable
         personSpeaksLan.push({person_id: i, language_id: 1});
