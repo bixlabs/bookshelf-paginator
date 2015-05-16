@@ -27,6 +27,7 @@
   "homepage": "https://github.com/bixsolutions/bookshelf-paginator",
   "devDependencies": {
     "chance": "^0.7.5",
+    "debug": "^2.2.0",
     "istanbul": "^0.3.14",
     "jscs": "^1.13.1",
     "jshint": "^2.7.0",
