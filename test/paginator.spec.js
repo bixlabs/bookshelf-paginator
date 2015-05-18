@@ -82,6 +82,10 @@ describe('Paginator', function() {
           should(paginator.getData().size()).equal(10);
           should(paginator.getData().at(0).get('lastname')).lessThan(paginator.getData().at(9).get('lastname'));
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 
