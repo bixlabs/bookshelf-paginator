@@ -27,6 +27,8 @@ var Person = Models.Bookshelf.Model.extend({
   toJSON: function() {
     return {
       fullname: [this.get('firstname'), ' ', this.get('lastname')].join(' ').trim(),
+      firstname: this.get('firstname'),
+      lastname: this.get('lastname'),
       primaryLanguage: this.getPrimaryLanguage()
     };
   }
