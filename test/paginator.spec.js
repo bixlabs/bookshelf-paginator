@@ -133,9 +133,8 @@ describe('Paginator', function() {
       paginator
         .paginate({limit: 10, gender: 'female', sortBy: '-lastname'}, {withRelated: 'languages'})
         .then(function() {
-          should(paginator.getTotal()).equal(50);
-          should(paginator.getData().size()).equal(10);
-          should(paginator.getData().at(0).getPrimaryLanguage()).not.equal(null);
+          should(paginator.getTotal()).equal(50, 'Wrong total counter');
+          should(paginator.getData().size()).equal(10, 'Wrong pagination');
           done();
         })
         .catch(function(err) {
