@@ -6,6 +6,7 @@ var bootstrap = require('./../src/bootstrap');
 var Models;
 var Paginator;
 var should = require('should');
+var _ = require('lodash');
 
 describe('Paginator', function() {
   before(function(done) {
@@ -32,6 +33,10 @@ describe('Paginator', function() {
           should(paginator.getTotal()).equal(80);
           should(paginator.getData().size()).equal(10);
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 
@@ -42,6 +47,10 @@ describe('Paginator', function() {
           should(paginator.getTotal()).equal(80);
           should(paginator.getData().size()).equal(25);
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 
@@ -123,6 +132,39 @@ describe('Paginator', function() {
           should(paginator.getTotal()).equal(50);
           should(paginator.getData().size()).equal(10);
           should(paginator.getData().at(0).getPrimaryLanguage()).not.equal(null);
+          done();
+        })
+        .catch(function(err) {
+          done(err);
+
+        });
+    });
+
+    it('able to paginate results with related models without dulicate any records', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
+      });
+
+      var counters = {};
+
+      paginator
+        .paginate({limit: 10, gender: 'female', sortBy: '-lastname'}, {withRelated: 'languages'})
+        .then(function() {
+          should(paginator.getTotal()).equal(50);
+          should(paginator.getData().size()).equal(10);
+          should(paginator.getData().at(0).getPrimaryLanguage()).not.equal(null);
+          paginator.getData().toArray().forEach(function(person) {
+            if (!counters[person.id]) {
+              counters[person.id] = 0;
+            }
+
+            counters[person.id]++;
+          });
+
+          _.forIn(counters, function(value) {
+            should(value).equal(1, 'Each Person can\'t be duplicated');
+          });
+
           done();
         })
         .catch(function(err) {
