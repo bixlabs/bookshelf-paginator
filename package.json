@@ -50,5 +50,8 @@
       "node_modules/**",
       "coverage/**"
     ]
+  },
+  "optionalDependencies": {
+    "pg": "^4.3.0"
   }
 }

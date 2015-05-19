@@ -11,7 +11,24 @@ var Promise = require('bluebird');
 var fs = require('q-io/fs');
 var dbFile = path.join(__dirname, '..', 'data', 'data.db');
 var chance = require('chance').Chance();
+var exec = Promise.promisify(require('child_process').exec);
 var datastore;
+var configs = {
+  sqlite: {
+    client: 'sqlite',
+    connection: {
+      filename: dbFile
+    }
+  },
+  postgres: {
+    client: 'pg',
+    connection: {
+      user: 'postgres',
+      host: 'localhost',
+      database: 'bookshelf_pagination_test'
+    }
+  }
+};
 
 function insert(cant, gender) {
   return Promise.map(new Array(cant).join(0).split(0).map(Number.call, Number), function() {
@@ -23,24 +40,55 @@ function insert(cant, gender) {
   });
 }
 
-function initilize() {
-  return fs.exists(dbFile).then(
-    function(exists) {
-      if (exists) {
-        return fs.remove(dbFile);
-      }
-    }
-
-  )
-    .then(function() {
-      datastore = bookshelf(knex({
-        client: 'sqlite',
-        debug: parseInt(process.env.DB_DEBUG || 0) === 1,
-        connection: {
-          filename: dbFile
+function recreateDatabase(type) {
+  var config = configs[type];
+  if (type === 'sqlite') {
+    return fs.exists(dbFile).then(
+      function(exists) {
+        if (exists) {
+          return fs.remove(dbFile);
+        } else {
+          return Promise.resolve({});
         }
-      }));
+      }
 
+    );
+  } else {
+    var conn = config.connection;
+
+    return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | psql -U ' + conn.user)
+      .then(function() {
+        return exec('psql -c\'create database ' + conn.database + '\' -U ' + conn.user);
+      });
+  }
+}
+
+/**
+ * Initialize the database
+ * @param type
+ * @returns {*}
+ */
+function initilize(type) {
+
+  type = type || 'sqlite';
+
+  var config;
+
+  // TODO: move this settings to external file
+  switch (type) {
+    case 'sqlite':
+    case 'postgres':
+      config = configs[type];
+      break;
+    default:
+      throw new Error('Database type:' + type + ' not supported');
+  }
+
+  config.debug = parseInt(process.env.DB_DEBUG || 0) === 1;
+
+  return recreateDatabase(type)
+    .then(function() {
+      datastore = bookshelf(knex(config));
       loader.init(datastore, {
         plugins: ['virtuals', 'visibility', 'registry'],
         excludes: [],

@@ -11,7 +11,7 @@ var _ = require('lodash');
 describe('Paginator', function() {
   before(function(done) {
     this.timeout(10000);
-    bootstrap.initialize()
+    bootstrap.initialize(process.env.DB_TYPE)
       .then(function() {
         // Needs lazy load
         Models = require('bookshelf-model-loader');
