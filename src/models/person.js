@@ -5,6 +5,7 @@
  */
 
 var Models = require('bookshelf-model-loader');
+var _ = require('lodash');
 
 var Person = Models.Bookshelf.Model.extend({
   tableName: 'person',
@@ -16,9 +17,13 @@ var Person = Models.Bookshelf.Model.extend({
     return this.related('languages');
   },
 
+  getPlainLanguages: function() {
+    return this.getLanguages().map(function(i) { return i.get('name'); }).sort();
+  },
+
   getPrimaryLanguage: function() {
     if (this.getLanguages().size()) {
-      return this.getLanguages().at(0).get('name');
+      return this.getPlainLanguages()[0];
     } else {
       return null;
     }
