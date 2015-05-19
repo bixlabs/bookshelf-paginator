@@ -1,6 +1,6 @@
 {
   "name": "bookshelf-paginator",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Allow paginate your models with ease",
   "main": "lib/paginator.js",
   "scripts": {

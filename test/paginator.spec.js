@@ -248,7 +248,7 @@ describe('Paginator', function() {
         });
     });
 
-    it('it able to filtering using different comparison operator', function(done) {
+    it('able to filtering using different comparison operator', function(done) {
       var paginator = new Paginator('Person', {
         filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name'],
         comp: 'LIKE'
@@ -265,7 +265,29 @@ describe('Paginator', function() {
           );
 
           done();
-        })
+        });
+    });
+
+    it('able to filtering using different comparison operator for different properites', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name'],
+        comp: {
+          LIKE: ['gender', 'firstname', 'lastname', 'languages.name']
+        }
+      });
+
+      paginator
+        .paginate({firstname: 'L%', id: 25})
+        .then(function() {
+          paginator.getData().map(
+            function(person) {
+              should(person.get('firstname')).match(/^L/);
+            }
+
+          );
+
+          done();
+        });
     });
   });
 });
