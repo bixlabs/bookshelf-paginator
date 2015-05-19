@@ -117,7 +117,7 @@ function initilize(type) {
           function(table) {
             table.integer('person_id');
             table.integer('language_id');
-            table.primary('person_id', 'language_id');
+            table.primary(['person_id', 'language_id']);
           }
 
         )
