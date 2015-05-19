@@ -100,6 +100,9 @@ describe('Paginator', function() {
           should(paginator.getData().size()).equal(10);
           should(paginator.getData().at(0).get('lastname')).greaterThan(paginator.getData().at(9).get('lastname'));
           done();
+        })
+        .catch(function(err) {
+          done(err);
         });
     });
 
@@ -122,6 +125,9 @@ describe('Paginator', function() {
           offset10 = paginator.getData().toJSON();
           should(offset0).not.equal(offset10);
           done();
+        })
+        .catch(function(err) {
+          done(err);
         });
     });
 
@@ -265,6 +271,9 @@ describe('Paginator', function() {
           );
 
           done();
+        })
+        .catch(function(err) {
+          done(err);
         });
     });
 
