@@ -289,5 +289,44 @@ describe('Paginator', function() {
           done();
         });
     });
+
+    it('able to sorting results properly through the whole list', function(done) {
+      var paginator = new Paginator('Person', {
+        filterBy: ['lastname'],
+        sortBy: 'lastname'
+      });
+
+      var paginated;
+      var nonPaginated;
+
+      paginator.paginate({offset: 0, limit: 20})
+        .then(function() {
+          paginated = paginator.getData().toJSON();
+          return paginator.paginate({offset: 20, limit: 20});
+        })
+        .then(function() {
+          paginated = paginated.concat(paginator.getData().toJSON());
+          return paginator.paginate({offset: 40, limit: 20});
+        })
+        .then(function() {
+          paginated = paginated.concat(paginator.getData().toJSON());
+          return paginator.paginate({offset: 60, limit: 20});
+        })
+        .then(function() {
+          paginated = paginated.concat(paginator.getData().toJSON());
+          return paginator.paginate({limit: 80, offset: 0});
+        })
+        .then(function() {
+          nonPaginated = paginator.getData().toJSON();
+          should(paginated.length).equal(80, 'Paginate concat fail');
+          should(nonPaginated.length).equal(80, 'Non paginated fail');
+          should(paginated).eql(nonPaginated);
+          done();
+        })
+        .catch(function(err) {
+          done(err);
+
+        });
+    });
   });
 });
