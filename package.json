@@ -52,6 +52,8 @@
     ]
   },
   "optionalDependencies": {
+    "mariasql": "^0.1.23",
+    "mysql": "^2.6.2",
     "pg": "^4.3.0"
   }
 }

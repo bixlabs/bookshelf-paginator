@@ -27,6 +27,14 @@ var configs = {
       host: 'localhost',
       database: 'bookshelf_pagination_test'
     }
+  },
+  mysql: {
+    client: 'mysql',
+    connection: {
+      user: 'root',
+      host: 'localhost',
+      database: 'bookshelf_pagination_test'
+    }
   }
 };
 
@@ -42,24 +50,32 @@ function insert(cant, gender) {
 
 function recreateDatabase(type) {
   var config = configs[type];
-  if (type === 'sqlite') {
-    return fs.exists(dbFile).then(
-      function(exists) {
-        if (exists) {
-          return fs.remove(dbFile);
-        } else {
-          return Promise.resolve({});
-        }
-      }
+  var conn;
 
-    );
-  } else {
-    var conn = config.connection;
+  switch (type) {
 
-    return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | psql -U ' + conn.user)
-      .then(function() {
-        return exec('psql -c\'create database ' + conn.database + '\' -U ' + conn.user);
-      });
+    case 'sqlite':
+      return fs.exists(dbFile).then(function(exists) {
+          if (exists) {
+            return fs.remove(dbFile);
+          } else {
+            return Promise.resolve({});
+          }
+        });
+
+    case 'postgres':
+      conn = config.connection;
+      return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | psql -U ' + conn.user)
+        .then(function() {
+          return exec('psql -c\'create database ' + conn.database + '\' -U ' + conn.user);
+        });
+
+    case 'mysql':
+      conn = config.connection;
+      return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | mysql -u ' + conn.user)
+        .then(function() {
+          return exec('mysqladmin -u ' + conn.user + ' create ' + conn.database);
+        });
   }
 }
 
@@ -78,6 +94,7 @@ function initilize(type) {
   switch (type) {
     case 'sqlite':
     case 'postgres':
+    case 'mysql':
       config = configs[type];
       break;
     default:
