@@ -337,5 +337,20 @@ describe('Paginator', function() {
 
         });
     });
+
+    it('able to paginate results filtering with related properties (belongsTo)', function(done) {
+      var paginator = new Paginator('Domain', {
+        filterBy: ['name', 'owner.name'],
+        sortBy: 'name'
+      });
+
+      paginator.paginate()
+        .then(function() {
+          done();
+        })
+        .catch(function(err) {
+          done(err);
+        });
+    });
   });
 });

@@ -141,6 +141,16 @@ function initilize(type) {
       ]);
     })
     .then(function() {
+      return datastore.knex.schema.createTable('domain',
+        function(table) {
+          table.increments();
+          table.string('name');
+          table.integer('person_id').references('id').inTable('person');
+        }
+
+      );
+    })
+    .then(function() {
       return Promise.all([insert(50, 'female'), insert(30, 'male')]);
     })
     .then(function() {
@@ -151,6 +161,19 @@ function initilize(type) {
 
       return Promise.map(languages, function(language) {
         return datastore.knex('language').insert(language);
+      });
+    })
+    .then(function() {
+      var domains = [];
+      for (var i = 1; i <= 80; i++) {
+
+        // jscs:disable
+        domains.push({person_id: i, name: chance.domain()});
+        // jscs:enable
+      }
+
+      return Promise.map(domains, function(domain) {
+        return datastore.knex('domain').insert(domain);
       });
     })
     .then(function() {
