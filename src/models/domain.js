@@ -12,8 +12,8 @@ var Domain = Models.Bookshelf.Model.extend({
     return this.belongsTo('Person', 'person_id');
   },
 
-  getOnwer: function() {
-    return this.related('person');
+  getOwner: function() {
+    return this.related('owner');
   }
 });
 

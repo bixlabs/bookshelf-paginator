@@ -340,12 +340,19 @@ describe('Paginator', function() {
 
     it('able to paginate results filtering with related properties (belongsTo)', function(done) {
       var paginator = new Paginator('Domain', {
-        filterBy: ['name', 'owner.name'],
-        sortBy: 'name'
+        filterBy: ['name', 'owner.firstname'],
+        sortBy: 'name',
+        comp: {
+          like: ['name', 'owner.firstname']
+        }
       });
 
-      paginator.paginate()
+      paginator.paginate({'owner.firstname': 'A%'})
         .then(function() {
+          paginator.getData().map(function(domain) {
+            should(domain.getOwner().get('firstname')).match(/^A/);
+          });
+
           done();
         })
         .catch(function(err) {
