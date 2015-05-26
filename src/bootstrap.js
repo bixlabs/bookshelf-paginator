@@ -10,7 +10,7 @@ var path = require('path');
 var Promise = require('bluebird');
 var fs = require('q-io/fs');
 var dbFile = path.join(__dirname, '..', 'data', 'data.db');
-var chance = require('chance').Chance();
+var chance = require('chance').Chance(12345);
 var exec = Promise.promisify(require('child_process').exec);
 var datastore;
 var configs = {
@@ -145,7 +145,7 @@ function initilize(type) {
         function(table) {
           table.increments();
           table.string('name');
-          table.integer('person_id').references('id').inTable('person');
+          table.integer('person_id').unsigned().references('person.id');
         }
 
       );
