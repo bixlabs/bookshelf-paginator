@@ -10,7 +10,6 @@ var _ = require('lodash');
 
 describe('Paginator', function() {
   before(function(done) {
-    this.timeout(10000);
     bootstrap.initialize(process.env.DB_TYPE)
       .then(function() {
         // Needs lazy load
@@ -205,7 +204,7 @@ describe('Paginator', function() {
         });
     });
 
-    it('able to sorting results with related model properties', function(done) {
+    it('able to sorting (invert) results with related model properties', function(done) {
       var paginator = new Paginator('Person', {
         filterBy: ['gender', 'firstname', 'lastname', 'id', 'languages.name']
       });
