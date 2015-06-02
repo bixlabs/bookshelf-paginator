@@ -1,13 +1,13 @@
 {
   "name": "bookshelf-paginator",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Allow paginate your models with ease",
   "main": "lib/paginator.js",
   "scripts": {
     "lint": "jshint ./src --reporter=./node_modules/jshint-full-path/index.js",
     "checkStyle": "jscs .",
     "pretest": "npm run-script lint && npm run-script checkStyle",
-    "test": "istanbul cover ./node_modules/.bin/_mocha -- --recursive -R spec -r should test/**/*",
+    "test": "istanbul cover ./node_modules/.bin/_mocha -- --timeout 20000 --recursive -R spec -r should test/**/*",
     "posttest": "istanbul check-coverage && rm -rf coverage"
   },
   "repository": {
