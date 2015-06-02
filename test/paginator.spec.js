@@ -295,6 +295,10 @@ describe('Paginator', function() {
           );
 
           done();
+        })
+        .catch(function(err) {
+          done(err);
+
         });
     });
 
