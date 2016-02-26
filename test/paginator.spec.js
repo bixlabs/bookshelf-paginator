@@ -362,5 +362,35 @@ describe('Paginator', function() {
           done(err);
         });
     });
+
+    if (process.env.DB_TYPE === 'postgres') {
+      it('able to paginate using raw filter', function(done) {
+        var paginator = new Paginator('Person', {
+          filterBy: ['lastname', 'address'],
+          rawFilters: {
+            address: 'person.profile ->> \'address\''
+          },
+          comp: {
+            ILIKE: ['lastname', 'address']
+          }
+        });
+
+        paginator
+          .paginate({address: 'venus', limit: 100})
+          .then(function() {
+            var people = paginator.getData();
+            should(people.length).equal(50, 'We should have 50 people from venus');
+
+            paginator.getData().map(function(person) {
+              should(person.get('profile').address).match(/^Venus/);
+            });
+
+            done();
+          })
+          .catch(function(err) {
+            done(err);
+          });
+      });
+    }
   });
 });

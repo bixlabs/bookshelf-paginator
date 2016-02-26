@@ -38,12 +38,13 @@ var configs = {
   }
 };
 
-function insert(cant, gender) {
+function insert(cant, gender, profile) {
   return Promise.map(new Array(cant).join(0).split(0).map(Number.call, Number), function() {
     return datastore.knex('person').insert({
       firstname: chance.first(),
       lastname: chance.last(),
-      gender: gender
+      gender: gender,
+      profile: profile
     });
   });
 }
@@ -65,9 +66,9 @@ function recreateDatabase(type) {
 
     case 'postgres':
       conn = config.connection;
-      return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | psql -U ' + conn.user)
+      return exec('echo "DROP DATABASE IF EXISTS ' + conn.database + '" | psql -U ' + conn.user + ' -h ' + conn.host)
         .then(function() {
-          return exec('psql -c\'create database ' + conn.database + '\' -U ' + conn.user);
+          return exec('psql -c\'create database ' + conn.database + '\' -U ' + conn.user + ' -h ' + conn.host);
         });
 
     case 'mysql':
@@ -127,6 +128,7 @@ function initilize(type) {
             table.string('firstname');
             table.string('lastname');
             table.string('gender');
+            table.json('profile');
           }
 
         ),
@@ -151,7 +153,7 @@ function initilize(type) {
       );
     })
     .then(function() {
-      return Promise.all([insert(50, 'female'), insert(30, 'male')]);
+      return Promise.all([insert(50, 'female', {address: 'Venus'}), insert(30, 'male', {address: 'Mars'})]);
     })
     .then(function() {
       var languages = [
