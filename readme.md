@@ -74,7 +74,7 @@ var paginator = new Paginator('Person', {
 });
 
 paginator.paginate().then(function(paginator) {
-  paginator.getResults(); // return a person collection
+  paginator.getData(); // return a person collection
   paginator.getTotal(); // return total register
   paginator.getOffset(); // return offset
   paginator.getLimit(); // return limit
@@ -94,7 +94,7 @@ app.get('/people', function(req, res) {
 
   paginator.paginate().then(function(paginator) {
     paginator.setHeaders(res);
-    res.json(paginator.getResults());
+    res.json(paginator.getData());
   });
 });
 ```
@@ -110,7 +110,7 @@ var paginator = new Paginator('Person', {
 });
 
 paginator.paginate({'languages.name': 'Spanish', 'sortBy': '-lastname'}).then(function(paginator) {
-  paginator.getResults(); // return a person collection
+  paginator.getData(); // return a person collection
   paginator.getTotal(); // return total register
   paginator.getOffset(); // return offset
   paginator.getLimit(); // return limit
